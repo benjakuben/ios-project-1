@@ -270,7 +270,7 @@ TestRunner().runTests(THProjectOneExceedsTests)
 /*
  NOTES FOR UNIT TESTING
  - Playground needs to be OS X platform, not iOS
- - We'll need to strip out import UIKit
+ - We'll need to prepend import XCTest
  - We'll need to append the tests directy to the file
  - Store players in an array named 'players'
  - Store teams as dictionaries, String: String, named teamSharks, teamDragons, and teamRaptors
