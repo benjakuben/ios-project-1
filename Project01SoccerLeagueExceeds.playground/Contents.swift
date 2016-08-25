@@ -371,6 +371,7 @@ for player in teamRaptors {
 // Helper functions for unit testing
 struct THTestHelper {
     static let expectedNumberOfPlayers = 18
+    static let expectedTeamSize = 6
     
     static let sharksName = "Sharks"
     static let dragonsName = "Dragons"
@@ -422,91 +423,37 @@ struct THTestHelper {
         
         return false
     }
-    
-    // Check to make sure letters for a given team contain all the needed criteria
-    // Format:
-    // To: Hyman and Rachel Krustofski
-    //
-    // Welcome to the 2016 Treehouse Soccer League! Herschel Krustofski has been assigned
-    // to the Sharks team, and their first practice will be at 5:30 PM on Sep 1. Thanks
-    // for playing, and good luck this season!
-
-    // Provide logic that prints a personalized letter to the guardians specifying: the player’s name, guardians' names, team name, and date/time of their first team practice. The letters should be visible when code is placed in a XCode Playground or run in an XCode project.
-    static func validateLetters(teamName: String) -> Bool {
-        var team: [[String: String]] = []
-        var teamPracticeDate: String = "X"
-        var teamPracticeTime: String = "X"
-        
-        switch (teamName) {
-        case THTestHelper.sharksName:
-            team = teamSharks
-            teamPracticeDate = THTestHelper.sharksPracticeDate
-            teamPracticeTime = THTestHelper.sharksPracticeTime
-        case THTestHelper.dragonsName:
-            team = teamDragons
-            teamPracticeDate = THTestHelper.dragonsPracticeDate
-            teamPracticeTime = THTestHelper.dragonsPracticeTime
-        case THTestHelper.raptorsName:
-            team = teamRaptors
-            teamPracticeDate = THTestHelper.raptorsPracticeDate
-            teamPracticeTime = THTestHelper.raptorsPracticeTime
-        default:
-            team = []
-        }
-        
-        for player in team {
-            for letter in letters {
-                if letter.containsString(player[THTestHelper.keyGuardians]!) &&
-                   letter.containsString(player[THTestHelper.keyName]!) &&
-                   letter.containsString(teamName) &&
-                   letter.containsString(teamPracticeDate) &&
-                   letter.containsString(teamPracticeTime) {
-                    return true
-                }
-            }
-        }
-        
-        return false
-    }
-    
-    func hasGuardian(letter: String, guardians: String) -> Bool {
-        return letter.containsString(guardians)
-    }
 }
 
-// All the test cases
+// Test cases for "Meets" expectations
 class THProjectOneMeetsTests: XCTestCase {
     
     func testPlayersIsArrayOfDict() {
         XCTAssert(THTestHelper.isVarAnArrayOfDict(players), "'players' is not an array of [String: String]")
     }
     
-    func testPlayersDictHasCorrectNameKey() {
-        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyName), "You are using the wrong key for player name (or have corrupt data).")
-    }
-    
-    func testPlayersDictHasCorrectHeightKey() {
+    func testPlayersDictionaryHasCorrectKeys() {
+        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyName), "You are using the wrong key for player name (or have corrupt data).)")
+
         XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyHeight), "You are using the wrong key for height (or have corrupt data).")
-    }
-    
-    func testPlayersDictHasCorrectExperienceKey() {
+
         XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyExperience), "You are using the wrong key for experience (or have corrupt data).")
-    }
-    
-    func testPlayersDictHasCorrectGuardiansKey() {
+
         XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyGuardians), "You are using the wrong key for guardian names (or have corrupt data).")
     }
     
-    func testTeamSharksIsArrayOfDict() {
+    func testTeamsAreArraysOfDictionaries() {
         XCTAssert(THTestHelper.isVarAnArrayOfDict(teamSharks), "'teamSharks' is not an array of [String: String]")
-    }
-    
-    func testTeamDragonsIsArrayOfDict() {
         XCTAssert(THTestHelper.isVarAnArrayOfDict(teamDragons), "'teamDragons' is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamRaptors), "'teamRaptors' is not an array of [String: String]")
     }
     
-    func testTeamRaptorsIsArrayOfDict() {
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamRaptors), "'teamRaptors' is not an array of [String: String]")
+    func testTeamsAreCorrectSizes() {
+        XCTAssertEqual(teamSharks.count, THTestHelper.expectedTeamSize, "The \(THTestHelper.sharksName) team size (\(teamSharks.count)) does not equal the expected size (\(THTestHelper.expectedTeamSize))")
+
+        XCTAssertEqual(teamDragons.count, THTestHelper.expectedTeamSize, "The \(THTestHelper.dragonsName) team size (\(teamDragons.count)) does not equal the expected size (\(THTestHelper.expectedTeamSize))")
+ 
+        XCTAssertEqual(teamRaptors.count, THTestHelper.expectedTeamSize, "The \(THTestHelper.raptorsName) team size (\(teamRaptors.count)) does not equal the expected size (\(THTestHelper.expectedTeamSize))")
     }
     
     func testNumberOfPlayersInArrayIsCorrect() {
@@ -564,49 +511,71 @@ class THProjectOneMeetsTests: XCTestCase {
         XCTAssertEqual(letters.count, THTestHelper.expectedNumberOfPlayers)
     }
     
-    func testContentsOfSharksLetters() {
-        XCTAssert(THTestHelper.validateLetters(sharksName), "Error validating letters for the \(sharksName) team")
-    }
-    
-    func testContentsOfDragonsLetters() {
-        XCTAssert(THTestHelper.validateLetters(dragonsName), "Error validating letters for the \(dragonsName) team")
-    }
-    
-    func testContentsOfRaptorsLetters() {
-        XCTAssert(THTestHelper.validateLetters(raptorsName), "Error validating letters for the \(raptorsName) team")
-    }
-    
-    func testyTest() {
+    func testContentsOfLettersFor(teamName: String) {
         var playerFound = false
+        var teamLetterCount = 0
         
-        for player in teamSharks {
-            playerFound = false // reset the guardianFound flag
+        var team: [[String: String]] = []
+        var teamPracticeDate = ""
+        var teamPracticeTime = ""
+        
+        switch(teamName) {
+        case THTestHelper.sharksName:
+            team = teamSharks
+            teamPracticeDate = THTestHelper.sharksPracticeDate
+            teamPracticeTime = THTestHelper.sharksPracticeTime
+        case THTestHelper.dragonsName:
+            team = teamDragons
+            teamPracticeDate = THTestHelper.dragonsPracticeDate
+            teamPracticeTime = THTestHelper.dragonsPracticeTime
+        case THTestHelper.raptorsName:
+            team = teamRaptors
+            teamPracticeDate = THTestHelper.raptorsPracticeDate
+            teamPracticeTime = THTestHelper.raptorsPracticeTime
+        default:
+            team = []
+        }
+        
+        for player in team {
+            playerFound = false // reset the playerFound flag each time
+            let playerName = player[THTestHelper.keyName]!
             
             for letter in letters {
-                // Find the matching letter based on the guardian
-                if letter.containsString(player[THTestHelper.keyName]!) {
+                // Find the matching letter based on the player's name
+                if letter.containsString(playerName) {
                     // Flag the player letter found
                     playerFound = true
-                    XCTAssert(letter.containsString(player[THTestHelper.keyGuardians]!), "guardian name error")
-                    XCTAssert(letter.containsString(THTestHelper.sharksName), "team name error")
-                    XCTAssert(letter.containsString(THTestHelper.sharksPracticeDate), "team practice date error")
-                    XCTAssert(letter.containsString(THTestHelper.sharksPracticeTime), "team practice time error")
+                    teamLetterCount += 1
+                    
+                    let errorMsgGuardian = "Could not find guardians '\(player[THTestHelper.keyGuardians]!)' in the letter for \(playerName)"
+                    let errorMsgTeamName = "Could not find team name '\(teamName)' in the letter for \(playerName)"
+                    let errorMsgPracticeDate = "Could not find practice date '\(teamPracticeDate)' in the letter for \(playerName)"
+                    let errorMsgPracticeTime = "Could not find practice time '\(teamPracticeTime)' in the letter for \(playerName)"
+                    
+                    XCTAssert(letter.containsString(player[THTestHelper.keyGuardians]!), errorMsgGuardian)
+                    XCTAssert(letter.containsString(teamName), errorMsgTeamName)
+                    XCTAssert(letter.containsString(teamPracticeDate), errorMsgPracticeDate)
+                    XCTAssert(letter.containsString(teamPracticeTime), errorMsgPracticeTime)
                 }
             }
          
             // Make sure a letter was found for this player
-            XCTAssert(playerFound, "player letter find error")
-            
-            // TODO: Update error messages here
-            // TODO: check shark letters count
-            // TODO: the other two teams
-            // TODO: Cleanup other tests above?
+            XCTAssert(playerFound, "Could not find a letter for the player named '\(playerName)'.")
         }
+        
+        XCTAssertEqual(teamLetterCount, THTestHelper.expectedTeamSize)
     }
     
-    // 
-    // "Exceeds" rubric tests
-    //
+    func testLetters() {
+        testContentsOfLettersFor(THTestHelper.sharksName)
+        testContentsOfLettersFor(THTestHelper.dragonsName)
+        testContentsOfLettersFor(THTestHelper.raptorsName)
+    }
+}
+
+// Test cases for "Exceeds" expectations
+class THProjectOneExceedsTests: XCTestCase {
+
     func testAverageTeamHeightsAreClose() {
         let sharksHeight = THTestHelper.getAverageHeightForTeam(teamSharks)
         let dragonsHeight = THTestHelper.getAverageHeightForTeam(teamDragons)
@@ -650,6 +619,7 @@ struct TestRunner {
 }
 
 TestRunner().runTests(THProjectOneMeetsTests)
+TestRunner().runTests(THProjectOneExceedsTests)
 
 
 /*
