@@ -37,7 +37,7 @@ import XCTest
 
 let keyName = "name"
 let keyHeight = "height"
-let keyPlayed = "playedBefore"
+let keyExperience = "experience"
 let keyGuardians = "guardians"
 
 var teamSharks: [[String: String]] = []
@@ -153,7 +153,8 @@ func getTeamHeightRank(teamIndex: Int) -> Int {
     else if sharksAvgHeight < dragonsAvgHeight && sharksAvgHeight > raptorsAvgHeight {
         sharksRank = 2
     }
-    else if sharksAvgHeight < raptorsAvgHeight && sharksAvgHeight > dragonsAvgHeight {            sharksRank = 2
+    else if sharksAvgHeight < raptorsAvgHeight && sharksAvgHeight > dragonsAvgHeight {
+        sharksRank = 2
     }
     
     // Set Dragons rank
@@ -206,14 +207,14 @@ func draftLetter(player:[String: String], teamName:String) -> String {
     
     switch teamName {
     case sharksName:
-        practiceTime = "6:00 PM"
-        practiceDate = "9/1/2016"
+        practiceTime = "5:30 PM"
+        practiceDate = "Sep 1"
     case dragonsName:
         practiceTime = "6:30 PM"
-        practiceDate = "9/2/2016"
+        practiceDate = "Sep 2"
     case raptorsName:
-        practiceTime = "2:00 PM"
-        practiceDate = "9/3/2016"
+        practiceTime = "7:30 PM"
+        practiceDate = "Sep 3"
     default:
         practiceTime = ""
         practiceDate = ""
@@ -232,24 +233,24 @@ func draftLetter(player:[String: String], teamName:String) -> String {
 // **************************
 
 let players = [
-    [keyName:"Joe Smith", keyHeight:"42", keyPlayed:"true", keyGuardians:"Jim and Jan Smith"],
-    [keyName:"Jill Tanner", keyHeight:"36", keyPlayed:"true", keyGuardians:"Clara Tanner"],
-    [keyName:"Bill Bon", keyHeight:"43", keyPlayed:"true", keyGuardians:"Sara and Jenny Bon"],
-    [keyName:"Eva Gordon", keyHeight:"45", keyPlayed:"false", keyGuardians:"Wendy and Mike Gordon"],
-    [keyName:"Matt Gill", keyHeight:"40", keyPlayed:"false", keyGuardians:"Charles and Sylvia Gill"],
-    [keyName:"Kimmy Stein", keyHeight:"41", keyPlayed:"false", keyGuardians:"Bill and Hillary Stein"],
-    [keyName:"Sammy Adams", keyHeight:"45", keyPlayed:"false", keyGuardians:"Jeff Adams"],
-    [keyName:"Karl Saygan", keyHeight:"42", keyPlayed:"true", keyGuardians:"Heather Bledsoe"],
-    [keyName:"Suzane Greenberg", keyHeight:"44", keyPlayed:"true", keyGuardians:"Henrietta Dumas"],
-    [keyName:"Sal Dali", keyHeight:"41", keyPlayed:"false", keyGuardians:"Gala Dali"],
-    [keyName:"Joe Kavalier", keyHeight:"39", keyPlayed:"false", keyGuardians:"Sam and Elaine Kavalier"],
-    [keyName:"Ben Finkelstein", keyHeight:"44", keyPlayed:"false", keyGuardians:"Aaron and Jill Finkelstein"],
-    [keyName:"Diego Soto", keyHeight:"41", keyPlayed:"true", keyGuardians:"Robin and Sarika Soto"],
-    [keyName:"Chloe Alaska", keyHeight:"47", keyPlayed:"false", keyGuardians:"David and Jamie Alaska"],
-    [keyName:"Arnold Willis", keyHeight:"43", keyPlayed:"false", keyGuardians:"Claire Willis"],
-    [keyName:"Phillip Helm", keyHeight:"44", keyPlayed:"true", keyGuardians:"Thomas Helm and Eva Jones"],
-    [keyName:"Les Clay", keyHeight:"42", keyPlayed:"true", keyGuardians:"Wynonna Brown"],
-    [keyName:"Herschel Krustofski", keyHeight:"45", keyPlayed:"true", keyGuardians:"Hyman and Rachel Krustofski"]
+    [keyName:"Joe Smith", keyHeight:"42", keyExperience:"YES", keyGuardians:"Jim and Jan Smith"],
+    [keyName:"Jill Tanner", keyHeight:"36", keyExperience:"YES", keyGuardians:"Clara Tanner"],
+    [keyName:"Bill Bon", keyHeight:"43", keyExperience:"YES", keyGuardians:"Sara and Jenny Bon"],
+    [keyName:"Eva Gordon", keyHeight:"45", keyExperience:"NO", keyGuardians:"Wendy and Mike Gordon"],
+    [keyName:"Matt Gill", keyHeight:"40", keyExperience:"NO", keyGuardians:"Charles and Sylvia Gill"],
+    [keyName:"Kimmy Stein", keyHeight:"41", keyExperience:"NO", keyGuardians:"Bill and Hillary Stein"],
+    [keyName:"Sammy Adams", keyHeight:"45", keyExperience:"NO", keyGuardians:"Jeff Adams"],
+    [keyName:"Karl Saygan", keyHeight:"42", keyExperience:"YES", keyGuardians:"Heather Bledsoe"],
+    [keyName:"Suzane Greenberg", keyHeight:"44", keyExperience:"YES", keyGuardians:"Henrietta Dumas"],
+    [keyName:"Sal Dali", keyHeight:"41", keyExperience:"NO", keyGuardians:"Gala Dali"],
+    [keyName:"Joe Kavalier", keyHeight:"39", keyExperience:"NO", keyGuardians:"Sam and Elaine Kavalier"],
+    [keyName:"Ben Finkelstein", keyHeight:"44", keyExperience:"NO", keyGuardians:"Aaron and Jill Finkelstein"],
+    [keyName:"Diego Soto", keyHeight:"41", keyExperience:"YES", keyGuardians:"Robin and Sarika Soto"],
+    [keyName:"Chloe Alaska", keyHeight:"47", keyExperience:"NO", keyGuardians:"David and Jamie Alaska"],
+    [keyName:"Arnold Willis", keyHeight:"43", keyExperience:"NO", keyGuardians:"Claire Willis"],
+    [keyName:"Phillip Helm", keyHeight:"44", keyExperience:"YES", keyGuardians:"Thomas Helm and Eva Jones"],
+    [keyName:"Les Clay", keyHeight:"42", keyExperience:"YES", keyGuardians:"Wynonna Brown"],
+    [keyName:"Herschel Krustofski", keyHeight:"45", keyExperience:"YES", keyGuardians:"Hyman and Rachel Krustofski"]
 ]
 
 // ****************************************************
@@ -258,7 +259,7 @@ let players = [
 
 // Sort the players by experience into two arrays
 for player in players {
-    if player[keyPlayed] == "true" {
+    if player[keyExperience] == "YES" {
         experiencedPlayers.append(player)
     }
     else {
@@ -344,16 +345,18 @@ while inexperiencedPlayers.count > 0 {
 // Step 3: Draft letters to players
 // ********************************
 
+var letters: [String] = []
+
 for player in teamSharks {
-    let letter = draftLetter(player, teamName:sharksName)
+    letters.append(draftLetter(player, teamName:sharksName))
 }
 
 for player in teamDragons {
-    let letter = draftLetter(player, teamName:dragonsName)
+    letters.append(draftLetter(player, teamName:dragonsName))
 }
 
 for player in teamRaptors {
-    let letter = draftLetter(player, teamName:raptorsName)
+    letters.append(draftLetter(player, teamName:raptorsName))
 }
 
 
@@ -367,13 +370,22 @@ for player in teamRaptors {
 
 // Helper functions for unit testing
 struct THTestHelper {
+    static let expectedNumberOfPlayers = 18
+    
     static let sharksName = "Sharks"
     static let dragonsName = "Dragons"
     static let raptorsName = "Raptors"
     
+    static let sharksPracticeDate = "Sep 1"
+    static let sharksPracticeTime = "5:30 PM"
+    static let dragonsPracticeDate = "Sep 2"
+    static let dragonsPracticeTime = "6:30 PM"
+    static let raptorsPracticeDate = "Sep 3"
+    static let raptorsPracticeTime = "7:30 PM"
+    
     static let keyName = "name"
     static let keyHeight = "height"
-    static let keyPlayed = "playedBefore"
+    static let keyExperience = "experience"
     static let keyGuardians = "guardians"
     
     // Calculate the average height of a given team
@@ -395,8 +407,70 @@ struct THTestHelper {
         return totalHeight / Double(team.count)
     }
     
+    // Check if a given variable is an array of dictionaries with [String: String] key/value pairs
     static func isVarAnArrayOfDict(varToCheck: Any) -> Bool {
         return varToCheck is [[String: String]]
+    }
+    
+    // Check to make sure keys are used in a dictionary (and return values)
+    static func testForInvalidKey(keyToTest: String) -> Bool {
+        for player in players {
+            if player[keyToTest] == nil {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    // Check to make sure letters for a given team contain all the needed criteria
+    // Format:
+    // To: Hyman and Rachel Krustofski
+    //
+    // Welcome to the 2016 Treehouse Soccer League! Herschel Krustofski has been assigned
+    // to the Sharks team, and their first practice will be at 5:30 PM on Sep 1. Thanks
+    // for playing, and good luck this season!
+
+    // Provide logic that prints a personalized letter to the guardians specifying: the player’s name, guardians' names, team name, and date/time of their first team practice. The letters should be visible when code is placed in a XCode Playground or run in an XCode project.
+    static func validateLetters(teamName: String) -> Bool {
+        var team: [[String: String]] = []
+        var teamPracticeDate: String = "X"
+        var teamPracticeTime: String = "X"
+        
+        switch (teamName) {
+        case THTestHelper.sharksName:
+            team = teamSharks
+            teamPracticeDate = THTestHelper.sharksPracticeDate
+            teamPracticeTime = THTestHelper.sharksPracticeTime
+        case THTestHelper.dragonsName:
+            team = teamDragons
+            teamPracticeDate = THTestHelper.dragonsPracticeDate
+            teamPracticeTime = THTestHelper.dragonsPracticeTime
+        case THTestHelper.raptorsName:
+            team = teamRaptors
+            teamPracticeDate = THTestHelper.raptorsPracticeDate
+            teamPracticeTime = THTestHelper.raptorsPracticeTime
+        default:
+            team = []
+        }
+        
+        for player in team {
+            for letter in letters {
+                if letter.containsString(player[THTestHelper.keyGuardians]!) &&
+                   letter.containsString(player[THTestHelper.keyName]!) &&
+                   letter.containsString(teamName) &&
+                   letter.containsString(teamPracticeDate) &&
+                   letter.containsString(teamPracticeTime) {
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    func hasGuardian(letter: String, guardians: String) -> Bool {
+        return letter.containsString(guardians)
     }
 }
 
@@ -404,23 +478,39 @@ struct THTestHelper {
 class THProjectOneMeetsTests: XCTestCase {
     
     func testPlayersIsArrayOfDict() {
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(players), "players is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(players), "'players' is not an array of [String: String]")
+    }
+    
+    func testPlayersDictHasCorrectNameKey() {
+        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyName), "You are using the wrong key for player name (or have corrupt data).")
+    }
+    
+    func testPlayersDictHasCorrectHeightKey() {
+        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyHeight), "You are using the wrong key for height (or have corrupt data).")
+    }
+    
+    func testPlayersDictHasCorrectExperienceKey() {
+        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyExperience), "You are using the wrong key for experience (or have corrupt data).")
+    }
+    
+    func testPlayersDictHasCorrectGuardiansKey() {
+        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyGuardians), "You are using the wrong key for guardian names (or have corrupt data).")
     }
     
     func testTeamSharksIsArrayOfDict() {
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamSharks), "teamSharks is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamSharks), "'teamSharks' is not an array of [String: String]")
     }
     
     func testTeamDragonsIsArrayOfDict() {
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamDragons), "teamDragons is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamDragons), "'teamDragons' is not an array of [String: String]")
     }
     
     func testTeamRaptorsIsArrayOfDict() {
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamRaptors), "teamRaptors is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamRaptors), "'teamRaptors' is not an array of [String: String]")
     }
     
-    func testNumberOfPlayersInArrayIs18() {
-        XCTAssertEqual(players.count, 18)
+    func testNumberOfPlayersInArrayIsCorrect() {
+        XCTAssertEqual(players.count, THTestHelper.expectedNumberOfPlayers)
     }
     
     func testTeamsHaveSameNumberOfPlayers() {
@@ -437,19 +527,19 @@ class THProjectOneMeetsTests: XCTestCase {
         var raptorsExperiencedCount = 0
         
         for player in teamSharks {
-            if player[THTestHelper.keyPlayed] == "true" {
+            if player[THTestHelper.keyExperience] == "YES" {
                 sharksExperiencedCount += 1
             }
         }
         
         for player in teamSharks {
-            if player[THTestHelper.keyPlayed] == "true" {
+            if player[THTestHelper.keyExperience] == "YES" {
                 dragonsExperiencedCount += 1
             }
         }
         
         for player in teamSharks {
-            if player[THTestHelper.keyPlayed] == "true" {
+            if player[THTestHelper.keyExperience] == "YES" {
                 raptorsExperiencedCount += 1
             }
         }
@@ -466,6 +556,57 @@ class THProjectOneMeetsTests: XCTestCase {
             errorMsg)
     }
     
+    func testLettersIsArrayOfStrings() {
+        XCTAssert(letters as Any is [String], "'letters' is not an array of [String]")
+    }
+    
+    func testNumberOfLettersInArrayIsCorrect() {
+        XCTAssertEqual(letters.count, THTestHelper.expectedNumberOfPlayers)
+    }
+    
+    func testContentsOfSharksLetters() {
+        XCTAssert(THTestHelper.validateLetters(sharksName), "Error validating letters for the \(sharksName) team")
+    }
+    
+    func testContentsOfDragonsLetters() {
+        XCTAssert(THTestHelper.validateLetters(dragonsName), "Error validating letters for the \(dragonsName) team")
+    }
+    
+    func testContentsOfRaptorsLetters() {
+        XCTAssert(THTestHelper.validateLetters(raptorsName), "Error validating letters for the \(raptorsName) team")
+    }
+    
+    func testyTest() {
+        var playerFound = false
+        
+        for player in teamSharks {
+            playerFound = false // reset the guardianFound flag
+            
+            for letter in letters {
+                // Find the matching letter based on the guardian
+                if letter.containsString(player[THTestHelper.keyName]!) {
+                    // Flag the player letter found
+                    playerFound = true
+                    XCTAssert(letter.containsString(player[THTestHelper.keyGuardians]!), "guardian name error")
+                    XCTAssert(letter.containsString(THTestHelper.sharksName), "team name error")
+                    XCTAssert(letter.containsString(THTestHelper.sharksPracticeDate), "team practice date error")
+                    XCTAssert(letter.containsString(THTestHelper.sharksPracticeTime), "team practice time error")
+                }
+            }
+         
+            // Make sure a letter was found for this player
+            XCTAssert(playerFound, "player letter find error")
+            
+            // TODO: Update error messages here
+            // TODO: check shark letters count
+            // TODO: the other two teams
+            // TODO: Cleanup other tests above?
+        }
+    }
+    
+    // 
+    // "Exceeds" rubric tests
+    //
     func testAverageTeamHeightsAreClose() {
         let sharksHeight = THTestHelper.getAverageHeightForTeam(teamSharks)
         let dragonsHeight = THTestHelper.getAverageHeightForTeam(teamDragons)
@@ -519,11 +660,13 @@ TestRunner().runTests(THProjectOneMeetsTests)
  - Store players in an array named 'players'
  - Store teams as dictionaries, String: String, named teamSharks, teamDragons, and teamRaptors
  - Specify keys as:
-     "name"
-     "height"
-     "playedBefore"
-     "guardians"
- 
+     - "name"
+     - "height"
+     - "experience" - use YES/NO as values
+     - "guardians"
+ - Store letters in an array named 'letters'
+ - This project does not test other player sets, but reviewers could copy/paste an alternate set in to give advice for improvements
+ - Specify date and time for practice (no year)
  
  http://initwithstyle.net/2015/11/tdd-in-swift-playgrounds/
  */
