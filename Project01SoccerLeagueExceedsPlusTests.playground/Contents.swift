@@ -80,9 +80,9 @@ func getTallestPlayer(players: [[String: String]]) -> (index: Int, player: [Stri
     var i = 0
     for player in players {
         if player[keyHeight] != nil {
-            let playerHeight: Double? = Double(player[keyHeight]!)
-            if playerHeight != nil && playerHeight > maxHeight {
-                maxHeight = playerHeight!
+            let playerHeight: Double = Double(player[keyHeight]!) ?? 0.0
+            if playerHeight > maxHeight {
+                maxHeight = playerHeight
                 tallestPlayer = player
                 index = i
             }
@@ -102,9 +102,9 @@ func getShortestPlayer(players: [[String: String]]) -> (index: Int, player: [Str
     var i = 0
     for player in players {
         if player[keyHeight] != nil {
-            let playerHeight: Double? = Double(player[keyHeight]!)
-            if playerHeight != nil && playerHeight < minHeight {
-                minHeight = playerHeight!
+            let playerHeight: Double = Double(player[keyHeight]!) ?? 0.0
+            if playerHeight < minHeight {
+                minHeight = playerHeight
                 shortestPlayer = player
                 index = i
             }
@@ -137,9 +137,9 @@ func getTeamAverageHeight(team:[[String: String]]) -> Double {
 // Calculate the average heights of each team, rank them, and return a specific one
 // based on a provided index
 func getTeamHeightRank(teamIndex: Int) -> Int {
-    let sharksAvgHeight = getTeamAverageHeight(teamSharks)
-    let dragonsAvgHeight = getTeamAverageHeight(teamDragons)
-    let raptorsAvgHeight = getTeamAverageHeight(teamRaptors)
+    let sharksAvgHeight = getTeamAverageHeight(team: teamSharks)
+    let dragonsAvgHeight = getTeamAverageHeight(team: teamDragons)
+    let raptorsAvgHeight = getTeamAverageHeight(team: teamRaptors)
     
     // Lowest rank by default
     var sharksRank = 3
@@ -287,19 +287,19 @@ while experiencedPlayers.count > 0 {
     var index: Int
     var player: [String: String]
     if playerType == "tallest" {
-        (index, player) = getTallestPlayer(experiencedPlayers)
+        (index, player) = getTallestPlayer(players: experiencedPlayers)
     }
     else {
-        (index, player) = getShortestPlayer(experiencedPlayers)
+        (index, player) = getShortestPlayer(players: experiencedPlayers)
     }
     
     // Assign the player (keep it to n teams)
-    var teamIndex = assignedCount % numberOfTeams
-    assign(player, to:teamIndex)
+    let teamIndex = assignedCount % numberOfTeams
+    assign(player: player, to:teamIndex)
     assignedCount += 1
     
     // Remove them from the array
-    experiencedPlayers.removeAtIndex(index)
+    experiencedPlayers.remove(at: index)
 }
 
 // Step 2b. Assign inexperienced players
@@ -319,26 +319,26 @@ else if teamRaptors.count < teamSharks.count || teamRaptors.count < teamDragons.
 }
 
 while inexperiencedPlayers.count > 0 {
-    let heightRank = getTeamHeightRank(assignIndex)
+    let heightRank = getTeamHeightRank(teamIndex: assignIndex)
     
     var index: Int
     var player: [String: String]
     if heightRank == 3 {
         // Get the tallest player
-        (index, player) = getTallestPlayer(inexperiencedPlayers)
+        (index, player) = getTallestPlayer(players: inexperiencedPlayers)
     }
     else {
         // Get the shortest player
-        (index, player) = getShortestPlayer(inexperiencedPlayers)
+        (index, player) = getShortestPlayer(players: inexperiencedPlayers)
     }
     
     // Assign the player (keep it to n teams)
-    var teamIndex = assignIndex % numberOfTeams
-    assign(player, to:teamIndex)
+    let teamIndex = assignIndex % numberOfTeams
+    assign(player: player, to:teamIndex)
     assignIndex += 1
     
     // Remove them from the array
-    inexperiencedPlayers.removeAtIndex(index)
+    inexperiencedPlayers.remove(at: index)
 }
 
 // ********************************
@@ -348,15 +348,15 @@ while inexperiencedPlayers.count > 0 {
 var letters: [String] = []
 
 for player in teamSharks {
-    letters.append(draftLetter(player, teamName:sharksName))
+    letters.append(draftLetter(player: player, teamName:sharksName))
 }
 
 for player in teamDragons {
-    letters.append(draftLetter(player, teamName:dragonsName))
+    letters.append(draftLetter(player: player, teamName:dragonsName))
 }
 
 for player in teamRaptors {
-    letters.append(draftLetter(player, teamName:raptorsName))
+    letters.append(draftLetter(player: player, teamName:raptorsName))
 }
 
 
@@ -431,23 +431,23 @@ struct THTestHelper {
 class THProjectOneMeetsTests: XCTestCase {
     
     func testPlayersIsArrayOfDict() {
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(players), "'players' is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(varToCheck: players), "'players' is not an array of [String: String]")
     }
     
     func testPlayersDictionaryHasCorrectKeys() {
-        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyName), "You are using the wrong key for player name (or have corrupt data).)")
+        XCTAssertFalse(THTestHelper.testForInvalidKey(keyToTest: THTestHelper.keyName), "You are using the wrong key for player name (or have corrupt data).)")
 
-        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyHeight), "You are using the wrong key for height (or have corrupt data).")
+        XCTAssertFalse(THTestHelper.testForInvalidKey(keyToTest: THTestHelper.keyHeight), "You are using the wrong key for height (or have corrupt data).")
 
-        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyExperience), "You are using the wrong key for experience (or have corrupt data).")
+        XCTAssertFalse(THTestHelper.testForInvalidKey(keyToTest: THTestHelper.keyExperience), "You are using the wrong key for experience (or have corrupt data).")
 
-        XCTAssertFalse(THTestHelper.testForInvalidKey(THTestHelper.keyGuardians), "You are using the wrong key for guardian names (or have corrupt data).")
+        XCTAssertFalse(THTestHelper.testForInvalidKey(keyToTest: THTestHelper.keyGuardians), "You are using the wrong key for guardian names (or have corrupt data).")
     }
     
     func testTeamsAreArraysOfDictionaries() {
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamSharks), "'teamSharks' is not an array of [String: String]")
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamDragons), "'teamDragons' is not an array of [String: String]")
-        XCTAssert(THTestHelper.isVarAnArrayOfDict(teamRaptors), "'teamRaptors' is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(varToCheck: teamSharks), "'teamSharks' is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(varToCheck: teamDragons), "'teamDragons' is not an array of [String: String]")
+        XCTAssert(THTestHelper.isVarAnArrayOfDict(varToCheck: teamRaptors), "'teamRaptors' is not an array of [String: String]")
     }
     
     func testTeamsAreCorrectSizes() {
@@ -544,7 +544,7 @@ class THProjectOneMeetsTests: XCTestCase {
             
             for letter in letters {
                 // Find the matching letter based on the player's name
-                if letter.containsString(playerName) {
+                if letter.contains(playerName) {
                     // Flag the player letter found
                     playerFound = true
                     teamLetterCount += 1
@@ -554,10 +554,10 @@ class THProjectOneMeetsTests: XCTestCase {
                     let errorMsgPracticeDate = "Could not find practice date '\(teamPracticeDate)' in the letter for \(playerName)"
                     let errorMsgPracticeTime = "Could not find practice time '\(teamPracticeTime)' in the letter for \(playerName)"
                     
-                    XCTAssert(letter.containsString(player[THTestHelper.keyGuardians]!), errorMsgGuardian)
-                    XCTAssert(letter.containsString(teamName), errorMsgTeamName)
-                    XCTAssert(letter.containsString(teamPracticeDate), errorMsgPracticeDate)
-                    XCTAssert(letter.containsString(teamPracticeTime), errorMsgPracticeTime)
+                    XCTAssert(letter.contains(player[THTestHelper.keyGuardians]!), errorMsgGuardian)
+                    XCTAssert(letter.contains(teamName), errorMsgTeamName)
+                    XCTAssert(letter.contains(teamPracticeDate), errorMsgPracticeDate)
+                    XCTAssert(letter.contains(teamPracticeTime), errorMsgPracticeTime)
                 }
             }
          
@@ -569,9 +569,9 @@ class THProjectOneMeetsTests: XCTestCase {
     }
     
     func testLetters() {
-        testContentsOfLettersFor(THTestHelper.sharksName)
-        testContentsOfLettersFor(THTestHelper.dragonsName)
-        testContentsOfLettersFor(THTestHelper.raptorsName)
+        testContentsOfLettersFor(teamName: THTestHelper.sharksName)
+        testContentsOfLettersFor(teamName: THTestHelper.dragonsName)
+        testContentsOfLettersFor(teamName: THTestHelper.raptorsName)
     }
 }
 
@@ -581,9 +581,9 @@ class THProjectOneMeetsTests: XCTestCase {
 class THProjectOneExceedsTests: XCTestCase {
 
     func testAverageTeamHeightsAreClose() {
-        let sharksHeight = THTestHelper.getAverageHeightForTeam(teamSharks)
-        let dragonsHeight = THTestHelper.getAverageHeightForTeam(teamDragons)
-        let raptorsHeight = THTestHelper.getAverageHeightForTeam(teamRaptors)
+        let sharksHeight = THTestHelper.getAverageHeightForTeam(team: teamSharks)
+        let dragonsHeight = THTestHelper.getAverageHeightForTeam(team: teamDragons)
+        let raptorsHeight = THTestHelper.getAverageHeightForTeam(team: teamRaptors)
         
         let allowedHeightDiff = 1.5
         let errorMsg = "Error! Team heights are more than \(allowedHeightDiff) inches apart!\n" +
@@ -602,13 +602,13 @@ class THProjectOneExceedsTests: XCTestCase {
 // TEST RUNNER
 //
 class PlaygroundTestObserver : NSObject, XCTestObservation {
-    @objc func testCase(testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: UInt) {
+    @objc private func testCase(testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: UInt) {
         print("Test failed on line \(lineNumber): \(testCase.name), \(description)")
     }
 }
 
 let observer = PlaygroundTestObserver()
-let center = XCTestObservationCenter.sharedTestObservationCenter()
+let center = XCTestObservationCenter.shared
 center.addTestObserver(observer)
 
 struct TestRunner {
@@ -617,16 +617,16 @@ struct TestRunner {
         print("Running test suite \(testClass)")
         
         let tests = testClass as! XCTestCase.Type
-        let testSuite = tests.defaultTestSuite()
-        testSuite.runTest()
+        let testSuite = tests.defaultTestSuite
+        testSuite.run()
         let run = testSuite.testRun as! XCTestSuiteRun
         
         print("Ran \(run.executionCount) tests in \(run.testDuration)s with \(run.totalFailureCount) failures")
     }
 }
 
-TestRunner().runTests(THProjectOneMeetsTests)
-TestRunner().runTests(THProjectOneExceedsTests)
+TestRunner().runTests(testClass: THProjectOneMeetsTests.self)
+TestRunner().runTests(testClass: THProjectOneExceedsTests.self)
 
 
 /*

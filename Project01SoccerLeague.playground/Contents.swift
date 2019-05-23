@@ -89,8 +89,8 @@ var experiencedCount = 0
 
 for player in players {
     if player[keyPlayed] == "true" {
-        var teamIndex = experiencedCount % 3 // Keep it to 3 teams
-        assign(player, to:teamIndex)
+        let teamIndex = experiencedCount % 3 // Keep it to 3 teams
+        assign(player: player, to:teamIndex)
         experiencedCount += 1
     }
 }
@@ -113,8 +113,8 @@ var inexperiencedCount = teamIndexForSmallestTeam
 
 for player in players {
     if player[keyPlayed] != "true" {
-        var teamIndex = inexperiencedCount % 3 // Keep it to 3 teams
-        assign(player, to:teamIndex)
+        let teamIndex = inexperiencedCount % 3 // Keep it to 3 teams
+        assign(player: player, to:teamIndex)
         inexperiencedCount += 1
     }
 }
@@ -161,15 +161,15 @@ func draftLetter(player:[String: String], team:String) -> String {
 }
 
 for player in teamSharks {
-    let letter = draftLetter(player, team:"Sharks")
+    let letter = draftLetter(player: player, team:"Sharks")
 }
 
 for player in teamDragons {
-    let letter = draftLetter(player, team:"Dragons")
+    let letter = draftLetter(player: player, team:"Dragons")
 }
 
 for player in teamRaptors {
-    let letter = draftLetter(player, team:"Raptors")
+    let letter = draftLetter(player: player, team:"Raptors")
 }
 
 

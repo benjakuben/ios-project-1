@@ -47,9 +47,9 @@ func getTallestPlayer(players: [[String: String]]) -> (index: Int, player: [Stri
     var i = 0
     for player in players {
         if player[keyHeight] != nil {
-            let playerHeight: Double? = Double(player[keyHeight]!)
-            if playerHeight != nil && playerHeight > maxHeight {
-                maxHeight = playerHeight!
+            let playerHeight: Double = Double(player[keyHeight]!) ?? 0.0
+            if playerHeight > maxHeight {
+                maxHeight = playerHeight
                 tallestPlayer = player
                 index = i
             }
@@ -69,9 +69,9 @@ func getShortestPlayer(players: [[String: String]]) -> (index: Int, player: [Str
     var i = 0
     for player in players {
         if player[keyHeight] != nil {
-            let playerHeight: Double? = Double(player[keyHeight]!)
-            if playerHeight != nil && playerHeight < minHeight {
-                minHeight = playerHeight!
+            let playerHeight: Double = Double(player[keyHeight]!) ?? 0.0
+            if playerHeight < minHeight {
+                minHeight = playerHeight
                 shortestPlayer = player
                 index = i
             }
@@ -104,9 +104,9 @@ func getTeamAverageHeight(team:[[String: String]]) -> Double {
 // Calculate the average heights of each team, rank them, and return a specific one
 // based on a provided index
 func getTeamHeightRank(teamIndex: Int) -> Int {
-    let sharksAvgHeight = getTeamAverageHeight(teamSharks)
-    let dragonsAvgHeight = getTeamAverageHeight(teamDragons)
-    let raptorsAvgHeight = getTeamAverageHeight(teamRaptors)
+    let sharksAvgHeight = getTeamAverageHeight(team: teamSharks)
+    let dragonsAvgHeight = getTeamAverageHeight(team: teamDragons)
+    let raptorsAvgHeight = getTeamAverageHeight(team: teamRaptors)
     
     // Lowest rank by default
     var sharksRank = 3
@@ -254,19 +254,19 @@ while experiencedPlayers.count > 0 {
     var index: Int
     var player: [String: String]
     if playerType == "tallest" {
-        (index, player) = getTallestPlayer(experiencedPlayers)
+        (index, player) = getTallestPlayer(players: experiencedPlayers)
     }
     else {
-        (index, player) = getShortestPlayer(experiencedPlayers)
+        (index, player) = getShortestPlayer(players: experiencedPlayers)
     }
     
     // Assign the player (keep it to n teams)
-    var teamIndex = assignedCount % numberOfTeams
-    assign(player, to:teamIndex)
+    let teamIndex = assignedCount % numberOfTeams
+    assign(player: player, to:teamIndex)
     assignedCount += 1
     
     // Remove them from the array
-    experiencedPlayers.removeAtIndex(index)
+    experiencedPlayers.remove(at: index)
 }
 
 // Step 2b. Assign inexperienced players
@@ -286,26 +286,26 @@ else if teamRaptors.count < teamSharks.count || teamRaptors.count < teamDragons.
 }
 
 while inexperiencedPlayers.count > 0 {
-    let heightRank = getTeamHeightRank(assignIndex)
+    let heightRank = getTeamHeightRank(teamIndex: assignIndex)
     
     var index: Int
     var player: [String: String]
     if heightRank == 3 {
         // Get the tallest player
-        (index, player) = getTallestPlayer(inexperiencedPlayers)
+        (index, player) = getTallestPlayer(players: inexperiencedPlayers)
     }
     else {
         // Get the shortest player
-        (index, player) = getShortestPlayer(inexperiencedPlayers)
+        (index, player) = getShortestPlayer(players: inexperiencedPlayers)
     }
     
     // Assign the player (keep it to n teams)
-    var teamIndex = assignIndex % numberOfTeams
-    assign(player, to:teamIndex)
+    let teamIndex = assignIndex % numberOfTeams
+    assign(player: player, to:teamIndex)
     assignIndex += 1
     
     // Remove them from the array
-    inexperiencedPlayers.removeAtIndex(index)
+    inexperiencedPlayers.remove(at: index)
 }
 
 // ********************************
@@ -315,13 +315,13 @@ while inexperiencedPlayers.count > 0 {
 var letters: [String] = []
 
 for player in teamSharks {
-    letters.append(draftLetter(player, teamName:sharksName))
+    letters.append(draftLetter(player: player, teamName:sharksName))
 }
 
 for player in teamDragons {
-    letters.append(draftLetter(player, teamName:dragonsName))
+    letters.append(draftLetter(player: player, teamName:dragonsName))
 }
 
 for player in teamRaptors {
-    letters.append(draftLetter(player, teamName:raptorsName))
+    letters.append(draftLetter(player: player, teamName:raptorsName))
 }
